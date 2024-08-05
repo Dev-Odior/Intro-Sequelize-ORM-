@@ -4,7 +4,11 @@ const environment = require('../config/environment');
 
 module.exports = (sequelize) => {
   class User extends Model {
-    static associate(models) {}
+    static associate(models) {
+      return models;
+      //   User.hasMany(models['Roles']);
+      //   User.hasOne(models['RefreshToken']);
+    }
 
     static async hashedPassword(password) {
       return bcrypt.hash(password, environment.saltRounds);
