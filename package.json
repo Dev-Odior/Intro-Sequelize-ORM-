@@ -7,6 +7,7 @@
     "dev": "nodemon src/server.js",
     "debug": "npm run dev -- --inspect",
     "test": "jest --runInBand",
+    "test:verbose": "jest --verbose --runInBand",
     "test:watch": "npm test -- --watch"
   },
   "keywords": [],

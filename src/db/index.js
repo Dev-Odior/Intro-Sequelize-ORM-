@@ -1,5 +1,5 @@
 const { Sequelize } = require('sequelize');
-const registerModels = require('../models/index.js');
+const { registerModels } = require('../models/index.js');
 
 module.exports = class DataBase {
   constructor(environment, dbConfig) {
@@ -10,7 +10,6 @@ module.exports = class DataBase {
 
   getConnectionString() {
     const { username, password, host, port, database } = this.dbConfig[this.environment];
-
     return `postgres://${username}:${password}@${host}:${port}/${database}`;
   }
 
@@ -24,7 +23,12 @@ module.exports = class DataBase {
     });
 
     // check if we connected successfully
-    await this.connection.authenticate({ logging: false });
+    try {
+      await this.connection.authenticate({ logging: false });
+      console.log('Connection has been established successfully');
+    } catch (error) {
+      console.log(`An error occurred ${error}`);
+    }
 
     if (!this.isTEstEnvironment) {
       console.log('Connection has been established successfully');
