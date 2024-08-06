@@ -13,6 +13,7 @@ router.post(
 
     const User = models.User;
     const Role = models.Role;
+    const sequelize = models.sequelize;
 
     const user = await User.findOne({ where: { email } });
 
@@ -23,25 +24,34 @@ router.post(
     }
 
     try {
-      const newUser = await User.create({ email, password });
-      const jwtPayload = { email };
+      const result = await sequelize.transaction(async () => {
+        const newUser = await User.create({ email, password });
+        const jwtPayload = { email };
 
-      const accessToken = JwtUtils.generateAccessToken(jwtPayload);
-      const refreshToken = JwtUtils.generateAccessToken(jwtPayload);
+        const accessToken = JwtUtils.generateAccessToken(jwtPayload);
+        const refreshToken = JwtUtils.generateAccessToken(jwtPayload);
 
-      // we have access to this because of the associations
-      await newUser.createRefreshToken({ token: refreshToken });
+        // we have access to this because of the associations
+        await newUser.createRefreshToken({ token: refreshToken });
 
-      if (roles && Array.isArray(roles)) {
-        const rolesToSave = [];
-        roles.forEach(async (role) => {
-          const newRole = await Role.create({ role });
-          rolesToSave.push(newRole);
-        });
+        if (roles && Array.isArray(roles)) {
+          const rolesToSave = [];
+          roles.forEach(async (role) => {
+            const newRole = await Role.create({ role });
+            rolesToSave.push(newRole);
+          });
 
-        // i can do this because of the associations
-        await newUser.addRoles(rolesToSave);
-      }
+          // i can do this because of the associations
+          await newUser.addRoles(rolesToSave);
+        }
+
+        console.log(accessToken, 'access token', refreshToken, 'refresh');
+        return { accessToken, refreshToken };
+      });
+
+      console.log(result, 'result and shii');
+
+      const { accessToken, refreshToken } = result;
 
       return res.status(200).send({
         success: true,
