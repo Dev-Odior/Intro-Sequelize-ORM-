@@ -26,16 +26,16 @@ async function registerModels(sequelize) {
     console.log(model);
 
     models[model.name] = model;
+
+    // Register the models
+    Object.keys(models).forEach((modelName) => {
+      if (models[modelName].associate) {
+        models[modelName].associate(models);
+      }
+    });
+
+    models.sequelize = sequelize;
   }
-
-  // Register the models
-  Object.keys(models).forEach((modelName) => {
-    if (models[modelName].associate) {
-      models[modelName].associate(models);
-    }
-  });
-
-  models.sequelize = sequelize;
 }
 
 module.exports = { registerModels, models };

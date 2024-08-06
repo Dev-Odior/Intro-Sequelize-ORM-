@@ -1,9 +1,10 @@
 const express = require('express');
-
 const logger = require('morgan');
 
 const environment = require('./config/environment');
 const errorsMiddleware = require('./middleware/error');
+
+const v1Routes = require('./controllers/index');
 
 class App {
   constructor() {
@@ -16,6 +17,7 @@ class App {
   }
 
   setRoutes() {
+    this.app.use('v1', v1Routes);
     this.app.use(errorsMiddleware);
   }
 
