@@ -44,6 +44,7 @@ module.exports = class DataBase {
   async sync() {
     this.connection.sync({
       force: this.isTEstEnvironment,
+      // force: true,
       logging: false,
     });
 

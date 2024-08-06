@@ -3,8 +3,7 @@ const { DataTypes, Model, Sequelize } = require('sequelize');
 module.exports = (sequelize) => {
   class Role extends Model {
     static associate(models) {
-        return models;
-    //   Role.belongsTo(models['User']);
+      Role.belongsTo(models['User']);
     }
   }
 

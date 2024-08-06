@@ -3,6 +3,7 @@ const express = require('express');
 const logger = require('morgan');
 
 const environment = require('./config/environment');
+const errorsMiddleware = require('./middleware/error');
 
 class App {
   constructor() {
@@ -14,7 +15,9 @@ class App {
     this.setRoutes();
   }
 
-  setRoutes() {}
+  setRoutes() {
+    this.app.use(errorsMiddleware);
+  }
 
   getApp() {}
 

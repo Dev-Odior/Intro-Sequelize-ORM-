@@ -23,6 +23,8 @@ async function registerModels(sequelize) {
     //  Dynamically require the model
     const model = require(filePath)(sequelize);
 
+    console.log(model);
+
     models[model.name] = model;
   }
 
@@ -32,6 +34,7 @@ async function registerModels(sequelize) {
       models[modelName].associate(models);
     }
   });
+
   models.sequelize = sequelize;
 }
 
