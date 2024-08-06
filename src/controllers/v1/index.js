@@ -5,4 +5,4 @@ const router = Router();
 
 router.use(registerRouter);
 
-export default router;
+module.exports = router;

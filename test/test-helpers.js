@@ -1,25 +1,25 @@
 const DataBase = require('../src/db/index');
 const dbConfig = require('../src/config/database');
-const App = require('../src/app');
-
-let db;
 
 class TestsHelpers {
-  static async startDb() {
-    db = new DataBase('test', dbConfig);
-    await db.connect();
-    return db;
+  constructor() {
+    this.db = new DataBase('test', dbConfig);
   }
 
-  static async stopDb() {
-    await db.disconnect();
+  async startDb() {
+    await this.db.connect();
   }
 
-  static async syncDb() {
-    await db.sync();
+  async stopDb() {
+    await this.db.disconnect();
   }
 
-  static getApp() {
+  async syncDb() {
+    await this.db.sync();
+  }
+
+  getApp() {
+    const App = require('../src/app');
     return new App().getApp();
   }
 }

@@ -5,7 +5,6 @@ const environment = require('../config/environment');
 module.exports = (sequelize) => {
   class User extends Model {
     static associate(models) {
-      console.log(models);
       User.hasMany(models['Role']);
       User.hasOne(models['RefreshToken']);
     }
@@ -19,11 +18,12 @@ module.exports = (sequelize) => {
     }
   }
 
+
   User.init(
     {
       email: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false, 
         unique: true,
         validate: {
           isEmail: {

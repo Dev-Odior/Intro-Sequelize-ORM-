@@ -1,17 +1,22 @@
 const { Router } = require('express');
-const models = require('../../models/index');
+const { models } = require('../../models/index');
+
 const JwtUtils = require('../../utils/jwt.utils');
 const runAsyncWrapper = require('../../utils/runAsyncWrapper');
 
 const router = Router();
 
-const { User, Role } = models;
-
 router.post(
   '/register',
   runAsyncWrapper(async (req, res, next) => {
     const { email, password, roles } = req.body;
-    const user = await User.fineOne({ where: { email } });
+
+    const User = models.User;
+    const Role = models.Role;
+
+    const user = await User.findOne({ where: { email } });
+
+    // const user = true;
 
     if (user) {
       return res.status(200).send({ success: false, message: 'user already exists' });
@@ -20,6 +25,7 @@ router.post(
     try {
       const newUser = await User.create({ email, password });
       const jwtPayload = { email };
+
       const accessToken = JwtUtils.generateAccessToken(jwtPayload);
       const refreshToken = JwtUtils.generateAccessToken(jwtPayload);
 

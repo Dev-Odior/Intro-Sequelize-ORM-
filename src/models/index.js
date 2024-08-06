@@ -1,11 +1,8 @@
 const fs = require('fs');
-const { fileURLToPath } = require('url');
 const path = require('path');
+const { Model } = require('sequelize');
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
-
-let models = {};
+var models = {};
 
 async function registerModels(sequelize) {
   // This files in the directory
@@ -23,19 +20,19 @@ async function registerModels(sequelize) {
     //  Dynamically require the model
     const model = require(filePath)(sequelize);
 
-    console.log(model);
-
     models[model.name] = model;
-
-    // Register the models
-    Object.keys(models).forEach((modelName) => {
-      if (models[modelName].associate) {
-        models[modelName].associate(models);
-      }
-    });
-
-    models.sequelize = sequelize;
   }
+
+
+  // Register the models
+  Object.keys(models).forEach((modelName) => {
+    if (models[modelName].associate) {
+      models[modelName].associate(models);
+    }
+  });
+
+  // Add the sequelize instance to the model
+  models.sequelize = sequelize;
 }
 
 module.exports = { registerModels, models };

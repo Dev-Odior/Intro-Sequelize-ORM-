@@ -43,8 +43,8 @@ module.exports = class DataBase {
 
   async sync() {
     this.connection.sync({
-      force: this.isTEstEnvironment,
-      // force: true,
+      // force: this.isTEstEnvironment,
+      force: true,
       logging: false,
     });
 
@@ -54,6 +54,7 @@ module.exports = class DataBase {
   }
 
   async disconnect() {
+    console.log('finally closed');
     await this.connection.close();
   }
 };

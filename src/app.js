@@ -12,16 +12,17 @@ class App {
     this.app.use(logger('dev', { skip: (req, res) => environment.nodeEnv === 'text' }));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
-
     this.setRoutes();
   }
 
   setRoutes() {
-    this.app.use('v1', v1Routes);
+    this.app.use('/v1', v1Routes);
     this.app.use(errorsMiddleware);
   }
 
-  getApp() {}
+  getApp() {
+    return this.app;
+  }
 
   listen() {
     const { port } = environment;
