@@ -3,7 +3,7 @@ const { DataTypes, Model } = require('sequelize');
 module.exports = (sequelize) => {
   class Role extends Model {
     static associate(models) {
-      Role.belongsTo(models['User']);
+      Role.belongsTo(models['User'], { foreignKey: 'userId' });
     }
   }
 
@@ -11,6 +11,10 @@ module.exports = (sequelize) => {
     {
       role: {
         type: DataTypes.STRING,
+      },
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
     },
     { sequelize, modelName: 'Role' }

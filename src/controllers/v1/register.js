@@ -32,16 +32,15 @@ router.post(
         // we have access to this because of the associations
         await newUser.createRefreshToken({ token: refreshToken });
 
+        // if (roles && Array.isArray(roles)) {
+        //   roles.map(async (role) => {
+        //     await Role.create({ role, userId: newUser?.id });
+        //   });
+        // }
+
         if (roles && Array.isArray(roles)) {
-          const rolesToSave = [];
-
-          roles.forEach(async (role) => {
-            const newRole = await Role.create({ role });
-            rolesToSave.push(newRole);
-          });
-
-          // i can do this because of the associations
-          await newUser.addRoles(rolesToSave);
+          // Ensure all role creations are completed before proceeding
+          await Promise.all(roles.map((role) => Role.create({ role, userId: newUser.id })));
         }
 
         return { accessToken, refreshToken };
@@ -49,12 +48,17 @@ router.post(
 
       const { accessToken, refreshToken } = result;
 
+      const users = await User.findAll({
+        include: [Role],
+      });
+
       return res.status(200).send({
         success: true,
         message: 'User successfully created',
         data: {
           accessToken,
           refreshToken,
+          users,
         },
       });
     } catch (error) {

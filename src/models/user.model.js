@@ -5,7 +5,7 @@ const environment = require('../config/environment');
 module.exports = (sequelize) => {
   class User extends Model {
     static associate(models) {
-      User.hasMany(models['Role']);
+      User.hasMany(models['Role'], { foreignKey: 'userId' });
       User.hasOne(models['RefreshToken']);
     }
 
