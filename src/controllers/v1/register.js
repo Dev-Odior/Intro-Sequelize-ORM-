@@ -17,8 +17,6 @@ router.post(
 
     const user = await User.findOne({ where: { email } });
 
-    // const user = true;
-
     if (user) {
       return res.status(200).send({ success: false, message: 'user already exists' });
     }
@@ -36,6 +34,7 @@ router.post(
 
         if (roles && Array.isArray(roles)) {
           const rolesToSave = [];
+
           roles.forEach(async (role) => {
             const newRole = await Role.create({ role });
             rolesToSave.push(newRole);
@@ -59,7 +58,7 @@ router.post(
         },
       });
     } catch (error) {
-      console.error('Error registering the user:/n', error.stack);
+      console.error('Error registering the user:/n', error);
       return res.status(500).send({ success: false, message: error.message });
     }
   })

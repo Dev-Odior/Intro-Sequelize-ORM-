@@ -18,12 +18,11 @@ module.exports = (sequelize) => {
     }
   }
 
-
   User.init(
     {
       email: {
         type: DataTypes.STRING,
-        allowNull: false, 
+        allowNull: false,
         unique: true,
         validate: {
           isEmail: {

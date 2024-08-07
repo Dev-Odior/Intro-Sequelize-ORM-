@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const { Model } = require('sequelize');
 
 var models = {};
 
@@ -22,7 +21,6 @@ async function registerModels(sequelize) {
 
     models[model.name] = model;
   }
-
 
   // Register the models
   Object.keys(models).forEach((modelName) => {
