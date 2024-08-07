@@ -45,11 +45,8 @@ router.post(
           await newUser.addRoles(rolesToSave);
         }
 
-        console.log(accessToken, 'access token', refreshToken, 'refresh');
         return { accessToken, refreshToken };
       });
-
-      console.log(result, 'result and shii');
 
       const { accessToken, refreshToken } = result;
 
