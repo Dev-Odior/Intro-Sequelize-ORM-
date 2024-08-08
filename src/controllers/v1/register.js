@@ -13,6 +13,7 @@ router.post(
 
     const User = models.User;
     const Role = models.Role;
+    const RefreshToken = models.RefreshToken;
     const sequelize = models.sequelize;
 
     const user = await User.findOne({ where: { email } });
@@ -23,8 +24,7 @@ router.post(
 
     try {
       const result = await sequelize.transaction(async (t) => {
-
-        // const roleAttribute = 
+        // const roleAttribute =
 
         const newUser = await User.create({ email, password });
         const jwtPayload = { email };
@@ -33,18 +33,34 @@ router.post(
         const refreshToken = JwtUtils.generateAccessToken(jwtPayload);
 
         // we have access to this because of the associations
-        await newUser.createRefreshToken({ token: refreshToken });
-
-        if (roles && Array.isArray(roles)) {
-          roles.map(async (role) => {
-            await Role.create({ role, userId: newUser.id });
-          });
-        }
+        // await newUser.createRefreshToken({ token: refreshToken });
 
         // if (roles && Array.isArray(roles)) {
-        //   // Ensure all role creations are completed before proceeding
-        //   await Promise.all(roles.map((role) => Role.create({ role, userId: newUser.id })));
+        //   roles.map(async (role) => {
+        //     await Role.create({ role, userId: newUser.id });
+        //   });
         // }
+
+        // let rolesToSave = [];
+
+        // if (roles && Array.isArray(roles)) {
+        //   roles.map(async (role) => {
+        //     rolesToSave = roles.map((role) => ({ role }));
+        //     // await Role.create({ role, userId: newUser.id });
+        //   });
+        // }
+
+        // another way to run the thing
+
+        // await User.create(
+        //   { email, password, Roles: rolesToSave, RefreshToken: { token: refreshToken } },
+        //   { include: [Role, RefreshToken] }
+        // );
+
+        if (roles && Array.isArray(roles)) {
+          // Ensure all role creations are completed before proceeding
+          await Promise.all(roles.map((role) => Role.create({ role, userId: newUser.id })));
+        }
 
         return { accessToken, refreshToken };
       });
