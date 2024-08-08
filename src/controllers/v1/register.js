@@ -22,7 +22,10 @@ router.post(
     }
 
     try {
-      const result = await sequelize.transaction(async () => {
+      const result = await sequelize.transaction(async (t) => {
+
+        // const roleAttribute = 
+
         const newUser = await User.create({ email, password });
         const jwtPayload = { email };
 
@@ -32,16 +35,16 @@ router.post(
         // we have access to this because of the associations
         await newUser.createRefreshToken({ token: refreshToken });
 
-        // if (roles && Array.isArray(roles)) {
-        //   roles.map(async (role) => {
-        //     await Role.create({ role, userId: newUser?.id });
-        //   });
-        // }
-
         if (roles && Array.isArray(roles)) {
-          // Ensure all role creations are completed before proceeding
-          await Promise.all(roles.map((role) => Role.create({ role, userId: newUser.id })));
+          roles.map(async (role) => {
+            await Role.create({ role, userId: newUser.id });
+          });
         }
+
+        // if (roles && Array.isArray(roles)) {
+        //   // Ensure all role creations are completed before proceeding
+        //   await Promise.all(roles.map((role) => Role.create({ role, userId: newUser.id })));
+        // }
 
         return { accessToken, refreshToken };
       });
